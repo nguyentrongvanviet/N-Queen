@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: queens-twelve
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60 --access-logfile -
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: DATABASE_PATH
+        value: /var/data/queens.db
+      - key: TRUST_RENDER_PROXY
+        value: "1"
+    disk:
+      name: queens-data
+      mountPath: /var/data
+      sizeGB: 1
